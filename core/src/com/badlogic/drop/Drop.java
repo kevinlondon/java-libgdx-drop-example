@@ -2,6 +2,7 @@ package com.badlogic.drop;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
@@ -21,7 +22,7 @@ public class Drop extends ApplicationAdapter {
 	SpriteBatch batch;
 	
 	Rectangle bucket;
-	
+	Vector3 touchPos;
 	
 	@Override
 	public void create () {
@@ -40,6 +41,7 @@ public class Drop extends ApplicationAdapter {
 		// Init the camera objects.
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 800, 480);
+		touchPos = new Vector3();
 		
 		batch = new SpriteBatch();
 		
@@ -64,10 +66,14 @@ public class Drop extends ApplicationAdapter {
 		batch.end();
 		
 		if (Gdx.input.isTouched()) {
-			Vector3 touchPos = new Vector3();
 			touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
 			camera.unproject(touchPos);
 			bucket.x = touchPos.x - bucket.width / 2;
 		}
+		
+		if (Gdx.input.isKeyPressed(Keys.LEFT)) bucket.x -= 200 * Gdx.graphics.getDeltaTime();
+		if (Gdx.input.isKeyPressed(Keys.RIGHT)) bucket.x += 200 * Gdx.graphics.getDeltaTime();
+		if (bucket.x < 0) bucket.x = 0;
+		if (bucket.x > 800 - bucket.width) bucket.x = 800 - bucket.width;
 	}
 }
